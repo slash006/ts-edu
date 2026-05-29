@@ -1,15 +1,22 @@
 import express from "express";
+import bodyParser from "body-parser";
 const port = process.env.PORT || 5000;
 
 
 const app = express();
 const router = express.Router();
+app.use(bodyParser.json());
 
 
 /*app.use((req, res, next) => {
 
+    console.log("first middleware");
     next();
 })*/
+
+
+app.use(router);
+
 
 router.get('/', (req, res) => {
 
@@ -18,22 +25,21 @@ router.get('/', (req, res) => {
 
 router.get('/hello', (req, res) => {
 
-    res.send('Welcome to hello');
+    res.send('Welcome to hello' + JSON.stringify(req.query?.abc));
 })
 
-/*
-app.use((req, res, next) => {
+router.post('/post', (req, res) => {
 
-    res.send("hii");
+    res.send('post data: ' + JSON.stringify(req.body.message));
 })
 
 app.use((err, req, res, next) => {
 
-    res.send("hi 2");
+    console.error("cannot get post");
+    res.status(500).send(err.message);
 })
-*/
 
-app.use(router);
+
 
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
